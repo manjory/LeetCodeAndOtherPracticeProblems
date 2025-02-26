@@ -34,23 +34,25 @@ class TreeNode:
 2. I will make sure that during generation the number of leaves dont go beyond m
 3. I will avoid creating redundant or duplicate trees
 """
-def generate_trees(n, m):
-    def helper(remaining_nodes, max_leaves):
-        if remaining_nodes == 1:
+def generateTrees(n, m):
+    def helper(leftoverNodes, maxLeaves):
+        if leftoverNodes == 1:
+            """I am using yield to make sure the tree generation happens one by one so 
+            it doesn't have to hold memory for each of the step"""
             yield TreeNode(0)
             return
 
-        for split in range(1, remaining_nodes):
-            for combo in combinations(range(1, remaining_nodes), split):
-                child_sizes = [combo[0]] + [combo[i] - combo[i-1] for i in range(1, len(combo))] + [remaining_nodes - combo[-1]]
+        for split in range(1, leftoverNodes):
+            for combo in combinations(range(1, leftoverNodes), split):
+                childSizes = [combo[0]] + [combo[i] - combo[i-1] for i in range(1, len(combo))] + [leftoverNodes - combo[-1]]
 
                 subtrees = []
-                for size in child_sizes:
-                    subtrees.append(list(helper(size, max_leaves - 1)))
+                for size in childSizes:
+                    subtrees.append(list(helper(size, maxLeaves - 1)))
 
-                for subtree_combination in combinations(subtrees, len(subtrees)):
+                for subtreeCombination in combinations(subtrees, len(subtrees)):
                     root = TreeNode(0)
-                    root.children = [st[0] for st in subtree_combination]
+                    root.children = [st[0] for st in subtreeCombination]
                     yield root
 
     count = 0
@@ -62,12 +64,16 @@ def generate_trees(n, m):
 
 
 # Example usage:
-print("For N = 8, M = 5:")
-generate_trees(8, 5)
+# print("For N = 8, M = 5:")
+# generateTrees(8, 5)
+
+print("For N = 3, M = 2:")
+generateTrees(3, 2)
+
 
 # For larger cases like N=30, M=3, you can uncomment the following lines:
 # print("For N = 30, M = 3:")
-# generate_trees(30, 3)
+# generateTrees(30, 3)
 
 
 
